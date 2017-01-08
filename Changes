@@ -1,3 +1,8 @@
+0.002   2017-01-08 (PERLANCAR)
+
+        - Do away with temporary file, we can directly eval() the source code.
+
+
 0.001   2017-01-08 (PERLANCAR)
 
         - First release.
