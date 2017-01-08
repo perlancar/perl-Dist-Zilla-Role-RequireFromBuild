@@ -1,3 +1,8 @@
+0.003   2017-01-09 (PERLANCAR)
+
+	- [Bugfix] Forgot to dereference.
+
+
 0.002   2017-01-08 (PERLANCAR)
 
         - Do away with temporary file, we can directly eval() the source code.
