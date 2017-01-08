@@ -15,7 +15,7 @@ sub require_from_build {
     }
 
     my @files = grep { $_->name eq "lib/$name" } @{ $self->zilla->files };
-    @files    = grep { $_->name eq $name }       $self->zilla->files
+    @files    = grep { $_->name eq $name }       @{ $self->zilla->files }
         unless @files;
     die "Can't find $name in lib/ or ./ in build files" unless @files;
 
@@ -54,7 +54,7 @@ $self->require_from_build("Foo::Bar") >> is a convenient shortcut for something
 like:
 
  my @files = grep { $_->name eq "lib/Foo/Bar.pm" } @{ $self->zilla->files };
- @files    = grep { $_->name eq "Foo/Bar.pm" }     $self->zilla->files unless @files;
+ @files    = grep { $_->name eq "Foo/Bar.pm" }     @{ $self->zilla->files } unless @files;
  die "Can't find Foo/Bar.pm in lib/ or ./ in build files" unless @files;
 
  eval $files[0]->encoded_content;
