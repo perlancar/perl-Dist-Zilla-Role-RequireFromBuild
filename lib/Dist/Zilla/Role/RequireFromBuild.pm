@@ -7,8 +7,6 @@ use 5.010001;
 use Moose::Role;
 
 sub require_from_build {
-    require File::Temp;
-
     my ($self, $name) = @_;
 
     if ($name =~ /::/) {
@@ -21,13 +19,10 @@ sub require_from_build {
         unless @files;
     die "Can't find $name in lib/ or ./ in build files" unless @files;
 
-    # write to temporary file, because the file object is not necessarily a
-    # Dist::Zilla::File::OnDisk object or it is already munged so the file no
-    # longer has the same content as the on-disk file.
-    my ($fh, $filename) = File::Temp::tempfile();
-    print $fh $files[0]->encoded_content;
-    close $fh;
-    do $filename;
+    my $file = $files[0];
+    my $filename = $file->name;
+    eval "# line 1 \"$filename (from dist build)\"\n" . $file->encoded_content;
+    die if $@;
 }
 
 no Moose::Role;
@@ -48,6 +43,8 @@ Then in your plugin subroutine, e.g. C<munge_files()>:
 
 =head1 DESCRIPTION
 
+Since build files are not necessarily on-disk files, but might also be in-memory
+files or files with munged content, we cannot use C<require()> directly.
 C<require_from_build()> is like Perl's C<require()> except it looks for files
 not from C<@INC> but from build files C<< $self->zilla->files >>. It searches
 libraries in C<lib/> and C<.>.
@@ -60,14 +57,8 @@ like:
  @files    = grep { $_->name eq "Foo/Bar.pm" }     $self->zilla->files unless @files;
  die "Can't find Foo/Bar.pm in lib/ or ./ in build files" unless @files;
 
- # write to temporary file, because the file object is not necessarily a
- # Dist::Zilla::File::OnDisk object or it is already munged so the file
- # no longer has the same content as the on-disk file.
- require File::Temp;
- my ($fh, $filename) = File::Temp::tempfile();
- print $fh $files[0]->encoded_content;
- close $fh;
- do $filename;
+ eval $files[0]->encoded_content;
+ die if $@;
 
 
 =head1 METHODS
