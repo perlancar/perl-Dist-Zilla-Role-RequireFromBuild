@@ -16,8 +16,8 @@ sub require_from_build {
         $name .= ".pm";
     }
 
-    my @files = grep { $_->name eq "lib/$name" } $self->zilla->files;
-    my @files = grep { $_->name eq $name }       $self->zilla->files
+    my @files = grep { $_->name eq "lib/$name" } @{ $self->zilla->files };
+    @files    = grep { $_->name eq $name }       $self->zilla->files
         unless @files;
     die "Can't find $name in lib/ or ./ in build files" unless @files;
 
@@ -25,6 +25,8 @@ sub require_from_build {
     # Dist::Zilla::File::OnDisk object or it is already munged so the file no
     # longer has the same content as the on-disk file.
     my ($fh, $filename) = File::Temp::tempfile();
+    print $fh $files[0]->encoded_content;
+    close $fh;
     do $filename;
 }
 
@@ -54,8 +56,8 @@ C<< $self->require_from_build("Foo/Bar.pm") >> or C<<
 $self->require_from_build("Foo::Bar") >> is a convenient shortcut for something
 like:
 
- my @files = grep { $_->name eq "lib/Foo/Bar.pm" } $self->zilla->files;
- my @files = grep { $_->name eq "Foo/Bar.pm" }     $self->zilla->files unless @files;
+ my @files = grep { $_->name eq "lib/Foo/Bar.pm" } @{ $self->zilla->files };
+ @files    = grep { $_->name eq "Foo/Bar.pm" }     $self->zilla->files unless @files;
  die "Can't find Foo/Bar.pm in lib/ or ./ in build files" unless @files;
 
  # write to temporary file, because the file object is not necessarily a
@@ -63,6 +65,8 @@ like:
  # no longer has the same content as the on-disk file.
  require File::Temp;
  my ($fh, $filename) = File::Temp::tempfile();
+ print $fh $files[0]->encoded_content;
+ close $fh;
  do $filename;
 
 
