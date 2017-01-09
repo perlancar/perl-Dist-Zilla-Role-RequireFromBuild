@@ -75,4 +75,4 @@ like:
 
 =head1 SEE ALSO
 
-L<lib::dzil::build>, the pragma version of the same functionality.
+L<Require::Hook::DzilBuild>
