@@ -1,3 +1,9 @@
+0.004   2017-01-09 (PERLANCAR)
+
+	- [Bugfix] Check and set entry in %INC, to behave more like
+	  require().
+
+
 0.003   2017-01-09 (PERLANCAR)
 
 	- [Bugfix] Forgot to dereference.
