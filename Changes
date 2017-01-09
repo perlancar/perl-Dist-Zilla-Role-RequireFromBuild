@@ -1,3 +1,10 @@
+0.005   2017-01-09 (PERLANCAR)
+
+	- No functional changes.
+
+	- [doc] Mention lib::dzil::build.
+
+
 0.004   2017-01-09 (PERLANCAR)
 
 	- [Bugfix] Check and set entry in %INC, to behave more like
