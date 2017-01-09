@@ -14,6 +14,8 @@ sub require_from_build {
         $name .= ".pm";
     }
 
+    return if exists $INC{$name};
+
     my @files = grep { $_->name eq "lib/$name" } @{ $self->zilla->files };
     @files    = grep { $_->name eq $name }       @{ $self->zilla->files }
         unless @files;
@@ -23,6 +25,7 @@ sub require_from_build {
     my $filename = $file->name;
     eval "# line 1 \"$filename (from dist build)\"\n" . $file->encoded_content;
     die if $@;
+    $INC{$name} = "(set by ".__PACKAGE__.", from build files)";
 }
 
 no Moose::Role;
@@ -53,12 +56,16 @@ C<< $self->require_from_build("Foo/Bar.pm") >> or C<<
 $self->require_from_build("Foo::Bar") >> is a convenient shortcut for something
 like:
 
+ return if exists $INC{"Foo/Bar.pm"};
+
  my @files = grep { $_->name eq "lib/Foo/Bar.pm" } @{ $self->zilla->files };
  @files    = grep { $_->name eq "Foo/Bar.pm" }     @{ $self->zilla->files } unless @files;
  die "Can't find Foo/Bar.pm in lib/ or ./ in build files" unless @files;
 
  eval $files[0]->encoded_content;
  die if $@;
+
+ $INC{"Foo/Bar.pm"} = "(set by Dist::Zilla::Role::RequireFromBuild, loaded from build file)";
 
 
 =head1 METHODS
