@@ -1,3 +1,11 @@
+0.006   2017-01-09 (PERLANCAR)
+
+	- No functional changes.
+
+	- [doc] Unmention lib::dzil::build, mention
+	  Require::Hook::DzilBuild.
+
+
 0.005   2017-01-09 (PERLANCAR)
 
 	- No functional changes.
