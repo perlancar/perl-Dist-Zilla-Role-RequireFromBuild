@@ -2,3 +2,4 @@ Dist-Zilla-Role-RequireFromBuild-*
 .build
 *~
 nytprof*
+.DS_Store
